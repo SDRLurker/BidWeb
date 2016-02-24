@@ -2,8 +2,11 @@
 from django.test import TestCase
 from django.utils import timezone
 from bid.models import Member, BidItem
+# SQL 로그 출력 위해 필요한 모듈들
+# https://docs.djangoproject.com/en/1.9/faq/models/
+# http://stackoverflow.com/questions/7447134/how-do-you-set-debug-to-true-when-running-a-django-test
 from django.db import connection, reset_queries
-#from django.test.utils import override_settings
+from django.test.utils import override_settings
 from django.conf import settings
 
 # Create your tests here.

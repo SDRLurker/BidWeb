@@ -8,10 +8,189 @@
 <form id="normal" name="form1" class="general" method="POST" action="/bid/add">
 <table>
 <tr> <td>번호</td> <td>선택</td> <td>예비가격</td> <td>사정율</td> </tr>
-{% for i in "xxxxxxxxxxxxxxx" %}
-	<tr> <td>{{ forloop.counter0 }}</td> <td>{{ i }}</td> <td>{{ i }}</td> <td>{{ i }}</td></li>
+{% load snippets %}
+{% for i in 1|get_range:16 %}
+	<tr> <td>{{ i }}</td> <td><input type="checkbox" id="i{{ i }}" name="checks" value="c{{ i }}"/></td> <td><input type="number" name="prices" id="n{{ i }}"/></td> <td id="r{{ i }}"></td> </tr>
 {% endfor %}
+<tr> <td>&nbsp;</td> <td colspan="3"><input type="number" name="base" id="base" placeholder="기초금액"/> <input type="text" name="rate" id="rate" placeholder="투찰율"/></td> </tr>
+<tr> <td colspan="4"> <button type="button" id="cal">계산</button></td> </tr>
 </table>
+
+<table>
+<tr>
+<td>불러오기</td>
+<td><select id="load"><option value="">===ID 선택===</option></select></td>
+<td></td>
+</tr>
+<tr>
+<td>저장하기</td>
+<td><input type="text" id="bid" name="bid"></input></td>
+<td><input type="button" id="save" value="저장"/></td>
+</tr>
+<tr>
+<td>삭제하기</td>
+<td><select id="del_select"><option value="">===ID 선택===</option></select></td>
+<td> / <input type="button" id="delete" value="삭제"/></td>
+</tr>
+<tr>
+<td>엑셀저장</td>
+<td colspan="2"><input type="button" id="excel" value="엑셀저장"/></td>
+</tr>
+</table>
+<input type="text" style="background-color:transparent;border:0px solid white;" name="update" id="update"/>
 </form>
+
+<table id="result">
+</table>
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<script>
+function commify(n) {
+	var reg = /(^[+-]?\d+)(\d{3})/;   // 정규식
+	n += '';                          // 숫자를 문자열로 변환
+
+	while (reg.test(n))
+		n = n.replace(reg, '$1' + ',' + '$2');
+
+	return n;
+}
+
+function check_submit() {
+	if(!document.form1.bid.value) {
+		alert("저장할 ID를 입력하세요.");
+		return false;
+	} 
+	return true;
+}
+
+// DB의 데이터 값 가져오는 로직 필요!!
+
+var check_array = [];
+var res;
+var res2 = [];
+var i;
+$("#cal").on("click", function(){
+	check_array = [];
+	res2 = [];	
+	for(i=1;i<=15;i++)
+	{
+		var str = "#i" + i;
+		var ischecked = $(str).prop('checked');
+		if(ischecked == true)	
+			check_array.push(i);
+		//console.log(str + " " + ischecked);
+	}	
+	if( $("#base").val().length === 0)
+	{
+		alert("기초금액을 입력해야 합니다.");
+		return;
+	}
+	if( $("#rate").val().length === 0) 
+	{
+		alert("투찰율을 입력해야 합니다.");
+		return;
+	}
+
+	if(check_array.length === 0)
+	{
+		alert("체크 표시를 하나 이상 해야합니다.");
+		return;
+	}
+	else if(check_array.length <= 4)
+	{
+		var check_num; 
+		res = k_combinations([1,2,3,4,5,6,7,8,9,10,11,12,13,14,15], 4);
+		for(i = 0; i<res.length;i++)
+		{
+			check_num = 0;
+			for(var j=0; j<check_array.length;j++)
+			{
+				if(jQuery.inArray(check_array[j], res[i]) >= 0)
+				{
+					check_num++;
+				}
+				if(check_num == check_array.length)
+					res2.push(res[i]);
+			}
+		}
+	}
+	else
+	{
+		res2 = k_combinations(check_array, 4);
+	}
+
+	/* 사정율 계산할 것! */
+	for(i=1;i<=15;i++)
+	{
+		var srate = parseFloat( $("#n"+i).val() ) / parseFloat( $("#base").val() ) * 100.0; 
+		//console.log(srate);
+		srate = srate.toFixed(3);
+		//console.log(srate);
+		$("#r"+i).html(srate + "%");
+	}
+
+	//console.log(res2);
+	// cal logic start..
+	$("#result").html("");
+	$("#result").append("<tr> <td>조합번호</td> <td>사정율</td> <td>투찰금액</td></tr>");
+	for(i=0;i<res2.length;i++)
+	{
+		var price;
+		var row;
+		var percent;
+		price = 0;
+		row = "";
+		percent = 0.0;	
+		for(var j=0;j<res2[i].length;j++)
+		{
+			price += parseInt( $("#n" + res2[i][j]).val() );
+		}	
+		price = price / 4.0;
+		//console.log(price);
+		percent = price / parseInt( $("#base").val() ) * 100.0;
+		percent = percent.toFixed(3);
+		price = parseFloat(price) * (parseFloat( $("#rate").val() ) / 100.0 );
+		price = parseFloat(price);
+		price = price.toFixed(0);
+		//console.log(price + " " + (parseInt( $("#rate").val() ) / 100.0 ) );
+		row = "<tr><td>" + res2[i] + "</td><td>" + percent + "<td><td>" + commify(price) + "</td></tr>";
+		$("#result").append(row);
+	}
+
+});
+
+$("#load").change(function(){
+	if($("#load").val() != "")
+		document.location.href = "index.php?bid=" + $("#load").val();
+	else
+		document.location.href = "index.php";
+});
+
+$("#delete").on("click", function(){
+	var bid = $("#del_select").val();
+	if(bid && bid!=="" && confirm(bid + "를 삭제하시겠습니까?")){
+		document.location.href = "delete.php?bid=" + $("#del_select").val();
+	}
+});
+
+$("#excel").on("click", function(){
+	var theForm=document.getElementById("normal");
+	theForm.action = "./excel.php";
+	theForm.submit();
+});
+
+$("#save").on("click", function(){
+	if(check_submit() === false)
+	{
+		e.preventDefault();
+		document.form1.bid.focus();	
+		document.location.href="index.php"; 
+		return;
+ 	}  
+	var theForm=document.getElementById("normal");
+	theForm.action = "./save.php";
+	theForm.submit();
+});
+
+</script>
 </body>
 </html>

@@ -3,14 +3,16 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 </head>
-<script type="text/javascript" src="combination.js"></script>
+{% load staticfiles %}
+<script type="text/javascript" src="{% static "combination.js" %}"></script>
 <body>
-<form id="normal" name="form1" class="general" method="POST" action="/bid/add">
+<form id="normal" name="form1" class="general" method="POST" action="/bid/add/">
+{% csrf_token %}
 <table>
 <tr> <td>번호</td> <td>선택</td> <td>예비가격</td> <td>사정율</td> </tr>
 {# 15번 루프를 돌아 1부터 시작하는 index를 얻기 위해 x를 15번 사용. #}
 {% for i in "xxxxxxxxxxxxxxx" %}
-	<tr> <td>{{ forloop.counter }}</td> <td><input type="checkbox" id="i{{ forloop.counter }}" name="checks" value="c{{ forloop.counter }}"/></td> <td><input type="number" name="prices" id="n{{ i }}"/></td> <td id="r{{ forloop.counter }}"></td> </tr>
+	<tr> <td>{{ forloop.counter }}</td> <td><input type="checkbox" id="i{{ forloop.counter }}" name="checks" value="c{{ forloop.counter }}"/></td> <td><input type="number" name="prices" id="n{{ forloop.counter }}"/></td> <td id="r{{ forloop.counter }}"></td> </tr>
 {% endfor %}
 <tr> <td>&nbsp;</td> <td colspan="3"><input type="number" name="base" id="base" placeholder="기초금액"/> <input type="text" name="rate" id="rate" placeholder="투찰율"/></td> </tr>
 <tr> <td colspan="4"> <button type="button" id="cal">계산</button></td> </tr>
@@ -63,6 +65,27 @@ function check_submit() {
 }
 
 // DB의 데이터 값 가져오는 로직 필요!!
+{% for item in biditems %}
+$("#load").append("<option value='{{item.id}}'>{{item.id}} - {{item.name}}</option>")
+$("#del_select").append("<option value='{{item.id}}'>{{item.id}} - {{item.name}}</option>")
+{% endfor %}
+
+{% if bid %}
+{% autoescape off %}
+var bid = {{bid.data}}
+{% endautoescape %}
+//console.log(bid);
+for(var i=0;i<bid.prices.length;i++) {
+	$("#n"+(i+1)).val(bid.prices[i]);
+}
+for(i=0;i<bid.checks.length;i++) {
+	if(bid.checks[i] == 1)
+		$("#i"+(i+1)).attr("checked", true);
+}
+$("#base").val(bid.base);
+$("#rate").val(bid.rate); 
+
+{% endif %}
 
 var check_array = [];
 var res;
@@ -160,9 +183,9 @@ $("#cal").on("click", function(){
 
 $("#load").change(function(){
 	if($("#load").val() != "")
-		document.location.href = "index.php?bid=" + $("#load").val();
+		document.location.href = "./" + $("#load").val();
 	else
-		document.location.href = "index.php";
+		document.location.href = "./";
 });
 
 $("#delete").on("click", function(){
@@ -183,11 +206,11 @@ $("#save").on("click", function(){
 	{
 		e.preventDefault();
 		document.form1.bid.focus();	
-		document.location.href="index.php"; 
+		document.location.href="./"; 
 		return;
  	}  
 	var theForm=document.getElementById("normal");
-	theForm.action = "./save.php";
+	theForm.action = "./add/";
 	theForm.submit();
 });
 

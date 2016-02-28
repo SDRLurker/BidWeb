@@ -21,5 +21,7 @@ import bid.views
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$', bid.views.index),
-    url(r'^bid/$', bid.views.bidindex)
+    url(r'^bid/$', bid.views.bidindex),
+    url(r'^bid/(?P<bid>\d+)$', bid.views.bidindexid),
+    url(r'^bid/add/$', bid.views.bidadd),
 ]

@@ -44,3 +44,12 @@ def bidadd(request):
     BidItem.objects.create(name=bid, data=data, member=actual_member)
     return redirect('/bid/'+bid)
 
+def biddel(request, bid):
+    actual_member = Member.objects.get(id=current_member)
+    try:
+        item = BidItem.objects.get(id=bid)
+    except Exception:
+        return redirect('/bid')
+    if actual_member == item.member:
+        item.delete()
+    return redirect('/bid')

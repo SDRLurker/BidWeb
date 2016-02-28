@@ -191,7 +191,7 @@ $("#load").change(function(){
 $("#delete").on("click", function(){
 	var bid = $("#del_select").val();
 	if(bid && bid!=="" && confirm(bid + "를 삭제하시겠습니까?")){
-		document.location.href = "delete.php?bid=" + $("#del_select").val();
+		document.location.href = "./del/" + $("#del_select").val();
 	}
 });
 

@@ -8,9 +8,9 @@
 <form id="normal" name="form1" class="general" method="POST" action="/bid/add">
 <table>
 <tr> <td>번호</td> <td>선택</td> <td>예비가격</td> <td>사정율</td> </tr>
-{% load snippets %}
-{% for i in 1|get_range:16 %}
-	<tr> <td>{{ i }}</td> <td><input type="checkbox" id="i{{ i }}" name="checks" value="c{{ i }}"/></td> <td><input type="number" name="prices" id="n{{ i }}"/></td> <td id="r{{ i }}"></td> </tr>
+{# 15번 루프를 돌아 1부터 시작하는 index를 얻기 위해 x를 15번 사용. #}
+{% for i in "xxxxxxxxxxxxxxx" %}
+	<tr> <td>{{ forloop.counter }}</td> <td><input type="checkbox" id="i{{ forloop.counter }}" name="checks" value="c{{ forloop.counter }}"/></td> <td><input type="number" name="prices" id="n{{ i }}"/></td> <td id="r{{ forloop.counter }}"></td> </tr>
 {% endfor %}
 <tr> <td>&nbsp;</td> <td colspan="3"><input type="number" name="base" id="base" placeholder="기초금액"/> <input type="text" name="rate" id="rate" placeholder="투찰율"/></td> </tr>
 <tr> <td colspan="4"> <button type="button" id="cal">계산</button></td> </tr>

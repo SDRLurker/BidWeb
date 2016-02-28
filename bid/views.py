@@ -8,5 +8,5 @@ def index(request):
     return HttpResponse('Hello World!')
 
 def bidindex(request):
-    #biditems = BidItem.objects.filter(member=u'admin')
-    return render(request, 'index.html')
+    biditems = BidItem.objects.filter(member=u'admin')
+    return render(request, 'index.html', biditems)

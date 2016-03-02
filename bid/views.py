@@ -26,7 +26,7 @@ def bidindexid(request, bid):
 def bidadd(request):
     actual_member = Member.objects.get(id=current_member)
     
-    bid_name = request.POST['bid']
+    bid_name = request.POST['bid_name']
     prices = [ int(x) for x in request.POST.getlist('prices') ]
     base = int(request.POST['base'])
     rate = float(request.POST['rate'])
@@ -37,12 +37,12 @@ def bidadd(request):
             checks.append(1)
         else:
             checks.append(0)
-    print checks
+    #print checks
     data = {'prices':prices, 'base':base, 'rate':rate, 'checks':checks}
-    print data
-
-    BidItem.objects.create(name=bid_name, data=json.dumps(data), member=actual_member)
-    return redirect('/bid/'+bid_name)
+    #print data
+    
+    item = BidItem.objects.create(name=bid_name, data=json.dumps(data), member=actual_member)
+    return redirect('/bid/'+str(item.id))
 
 def biddel(request, bid):
     actual_member = Member.objects.get(id=current_member)

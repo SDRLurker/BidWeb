@@ -65,25 +65,25 @@ function check_submit() {
 }
 
 // DB의 데이터 값 가져오는 로직 필요!!
-{% for item in biditems %}
-$("#load").append("<option value='{{item.id}}'>{{item.id}} - {{item.name}}</option>")
-$("#del_select").append("<option value='{{item.id}}'>{{item.id}} - {{item.name}}</option>")
+{% for biditem in biditems %}
+$("#load").append("<option value='{{biditem.id}}'>{{biditem.id}} - {{biditem.name}}</option>")
+$("#del_select").append("<option value='{{biditem.id}}'>{{biditem.id}} - {{biditem.name}}</option>")
 {% endfor %}
 
-{% if bid %}
+{% if item %}
 {% autoescape off %}
-var bid = {{bid.data}}
+var item = {{item.data}}
 {% endautoescape %}
 //console.log(bid);
-for(var i=0;i<bid.prices.length;i++) {
-	$("#n"+(i+1)).val(bid.prices[i]);
+for(var i=0;i<item.prices.length;i++) {
+	$("#n"+(i+1)).val(item.prices[i]);
 }
-for(i=0;i<bid.checks.length;i++) {
-	if(bid.checks[i] == 1)
+for(i=0;i<item.checks.length;i++) {
+	if(item.checks[i] == 1)
 		$("#i"+(i+1)).attr("checked", true);
 }
-$("#base").val(bid.base);
-$("#rate").val(bid.rate); 
+$("#base").val(item.base);
+$("#rate").val(item.rate); 
 
 {% endif %}
 

@@ -21,7 +21,7 @@ def bidindexid(request, bid):
         return redirect('/bid')
     print item.data
     print json.dumps(item.data)
-    return render(request, 'index.html', {'biditems':biditems, 'bid':item})
+    return render(request, 'index.html', {'biditems':biditems, 'item':item})
 
 def bidadd(request):
     actual_member = Member.objects.get(id=current_member)

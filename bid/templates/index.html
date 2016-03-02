@@ -26,7 +26,12 @@
 </tr>
 <tr>
 <td>저장하기</td>
+{# #1 : 1단계 관련(생각치 못하게 추가.) BidItem이 있다면 그 name을 세팅한다. 아니면 세팅하지 않는다.#}
+{% if item %}
+<td><input type="text" id="bid_name" name="bid_name" value="{{item.name}}" readonly></input></td>
+{% else %}
 <td><input type="text" id="bid_name" name="bid_name"></input></td>
+{% endif %}
 <td><input type="button" id="save" value="저장"/></td>
 </tr>
 <tr>
@@ -39,7 +44,10 @@
 <td colspan="2"><input type="button" id="excel" value="엑셀저장"/></td>
 </tr>
 </table>
-<input type="text" style="background-color:transparent;border:0px solid white;" name="update" id="update"/>
+{# #1 : 1단계 BidItem이 있다면 그 id를 bid 필드로 보낸다. #}
+{% if item %}
+<input type="hidden" style="background-color:transparent;border:0px solid white;" name="bid" id="bid" value="{{item.id}}"/>
+{% endif %}
 </form>
 
 <table id="result">

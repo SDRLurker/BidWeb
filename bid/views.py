@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.shortcuts import render, redirect
 from django.http.response import HttpResponse
 from models import BidItem, Member
@@ -16,7 +17,7 @@ def bidindex(request):
 def bidindexid(request, bid):
     biditems = BidItem.objects.filter(member=current_member)
     try:
-        item = BidItem.objects.get(id=bid)
+        item = BidItem.objects.get(id=bid, member=current_member)
     except Exception:
         return redirect('/bid')
     print item.data
@@ -41,7 +42,17 @@ def bidadd(request):
     data = {'prices':prices, 'base':base, 'rate':rate, 'checks':checks}
     #print data
     
-    item = BidItem.objects.create(name=bid_name, data=json.dumps(data), member=actual_member)
+    try:
+        # #1 2단계 POST 변수에서 bid에 값이 존재하는 지 확인. #}
+        bid = request.POST['bid']
+        # #1 3-1단계 bid 값이 존재하면 BidItem의 해당 id 값으로 update(갱신) 처리. #}
+        item = BidItem.objects.get(id=bid, member=actual_member)
+        item.name = bid_name
+        item.data = json.dumps(data)
+        item.save()
+    except Exception:
+        # #1 3-2단계 bid 값이 존재하지 않으면 insert(Create, 추가) 처리. #}
+        item = BidItem.objects.create(name=bid_name, data=json.dumps(data), member=actual_member)
     return redirect('/bid/'+str(item.id))
 
 def biddel(request, bid):

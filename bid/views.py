@@ -6,10 +6,6 @@ import json
 
 current_member = u'admin'
 
-# Create your views here.
-def index(request):
-    return HttpResponse('Hello World!')
-
 def bidindex(request):
     biditems = BidItem.objects.filter(member=current_member)
     return render(request, 'index.html', {'biditems':biditems})

@@ -20,9 +20,8 @@ import bid.views
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^$', bid.views.index),
-    url(r'^bid/$', bid.views.bidindex),
-    url(r'^bid/(?P<bid>\d+)$', bid.views.bidindexid),
-    url(r'^bid/add/$', bid.views.bidadd),
-    url(r'^bid/del/(?P<bid>\d+)$', bid.views.biddel),
+    url(r'^$', bid.views.bidindex),
+    url(r'^(?P<bid>\d+)$', bid.views.bidindexid),
+    url(r'^add/$', bid.views.bidadd),
+    url(r'^del/(?P<bid>\d+)$', bid.views.biddel),
 ]

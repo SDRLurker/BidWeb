@@ -10,14 +10,7 @@ from django.test.utils import override_settings
 from django.conf import settings
 
 # Create your tests here.
-class IndexTestPage(TestCase):
-    def testIndexPage(self):
-        # when
-        response = self.client.get('/')
-        # then
-        self.assertEqual(response.status_code,200)
-        self.assertIn(response.content, "Hello World!")
-        
+class IndexTestPage(TestCase):        
     def print_queries(self, name):
         print 
         print name

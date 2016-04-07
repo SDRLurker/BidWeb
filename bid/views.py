@@ -49,14 +49,14 @@ def bidadd(request):
     except Exception:
         # #1 3-2단계 bid 값이 존재하지 않으면 insert(Create, 추가) 처리. #}
         item = BidItem.objects.create(name=bid_name, data=json.dumps(data), member=actual_member)
-    return redirect('/bid/'+str(item.id))
+    return redirect('/'+str(item.id))
 
 def biddel(request, bid):
     actual_member = Member.objects.get(id=current_member)
     try:
         item = BidItem.objects.get(id=bid)
     except Exception:
-        return redirect('/bid')
+        return redirect('/')
     if actual_member == item.member:
         item.delete()
-    return redirect('/bid')
+    return redirect('/')

@@ -2,13 +2,34 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
 </head>
 {% load staticfiles %}
 <script type="text/javascript" src="{% static "combination.js" %}"></script>
 <body>
+<div class='col-xs-3'>
+<h3><a href="/">Bid Home</a></h3>
+<ul>
+{% for biditem in biditems %}
+	<li>
+		<a href="/{{biditem.id}}">{{biditem.name}}</a>
+		{% if biditem.id == item.id %}
+			<button onclick="delete_item()">삭제</button>
+		{% endif %}
+	</li>
+{% endfor %}
+</ul>
+</div>
+<div class='col-xs-5'>
 <form id="normal" name="form1" class="general" method="POST" action="/bid/add/">
 {% csrf_token %}
-<table>
+<table class="table">
 <tr> <td>번호</td> <td>선택</td> <td>예비가격</td> <td>사정율</td> </tr>
 {# 15번 루프를 돌아 1부터 시작하는 index를 얻기 위해 x를 15번 사용. #}
 {% for i in "xxxxxxxxxxxxxxx" %}
@@ -18,26 +39,17 @@
 <tr> <td colspan="4"> <button type="button" id="cal">계산</button></td> </tr>
 </table>
 
-<table>
-<tr>
-<td>불러오기</td>
-<td><select id="load"><option value="">===ID 선택===</option></select></td>
-<td></td>
-</tr>
+<table class="table">
 <tr>
 <td>저장하기</td>
-{# #1 : 1단계 관련(생각치 못하게 추가.) BidItem이 있다면 그 name을 세팅한다. 아니면 세팅하지 않는다.#}
+{# #1 : BidItem이 있다면(if item) item의 name을 세팅한다. 아니면 세팅하지 않는다.#}
 {% if item %}
-<td><input type="text" id="bid_name" name="bid_name" value="{{item.name}}" readonly></input></td>
+{# #3 : {{item.name}}을 수정할 수 있도록 처리. #}
+<td><input type="text" id="bid_name" name="bid_name" value="{{item.name}}"></input></td>
 {% else %}
 <td><input type="text" id="bid_name" name="bid_name"></input></td>
 {% endif %}
 <td><input type="button" id="save" value="저장"/></td>
-</tr>
-<tr>
-<td>삭제하기</td>
-<td><select id="del_select"><option value="">===ID 선택===</option></select></td>
-<td> / <input type="button" id="delete" value="삭제"/></td>
 </tr>
 <tr>
 <td>엑셀저장</td>
@@ -50,9 +62,9 @@
 {% endif %}
 </form>
 
-<table id="result">
+<table class='table' id="result">
 </table>
-<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+</div>
 <script>
 function commify(n) {
 	var reg = /(^[+-]?\d+)(\d{3})/;   // 정규식
@@ -71,12 +83,6 @@ function check_submit() {
 	} 
 	return true;
 }
-
-// DB의 데이터 값 가져오는 로직 필요!!
-{% for biditem in biditems %}
-$("#load").append("<option value='{{biditem.id}}'>{{biditem.id}} - {{biditem.name}}</option>")
-$("#del_select").append("<option value='{{biditem.id}}'>{{biditem.id}} - {{biditem.name}}</option>")
-{% endfor %}
 
 {% if item %}
 {% autoescape off %}
@@ -196,12 +202,14 @@ $("#load").change(function(){
 		document.location.href = "./";
 });
 
-$("#delete").on("click", function(){
-	var bid = $("#del_select").val();
+{% if item %}
+function delete_item(){
+	var bid = {{item.id}};
 	if(bid && bid!=="" && confirm(bid + "를 삭제하시겠습니까?")){
-		document.location.href = "./del/" + $("#del_select").val();
+		document.location.href = "./del/" + {{item.id}};
 	}
-});
+}
+{% endif %}
 
 $("#excel").on("click", function(){
 	var theForm=document.getElementById("normal");

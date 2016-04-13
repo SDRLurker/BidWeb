@@ -205,8 +205,8 @@ $("#load").change(function(){
 
 {% if item %}
 function delete_item(){
-	var bid = {{item.id}};
-	if(bid && bid!=="" && confirm(bid + "를 삭제하시겠습니까?")){
+	var bid_name = "{{item.name}}";
+	if(bid_name && bid_name!=="" && confirm(bid_name + "를 삭제하시겠습니까?")){
 		document.location.href = "./del/" + {{item.id}};
 	}
 }

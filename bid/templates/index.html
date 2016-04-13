@@ -46,10 +46,11 @@
 {% if item %}
 {# #3 : {{item.name}}을 수정할 수 있도록 처리. #}
 <td><input type="text" id="bid_name" name="bid_name" value="{{item.name}}"></input></td>
+<td><input type="button" id="save" value="수정"/></td>
 {% else %}
 <td><input type="text" id="bid_name" name="bid_name"></input></td>
+<td><input type="button" id="save" value="추가"/></td>
 {% endif %}
-<td><input type="button" id="save" value="저장"/></td>
 </tr>
 <tr>
 <td>엑셀저장</td>

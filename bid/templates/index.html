@@ -3,12 +3,12 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <!-- Latest compiled and minified CSS -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 <!-- Optional theme -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
-<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+<script src="//code.jquery.com/jquery-1.9.1.js"></script>
 <!-- Latest compiled and minified JavaScript -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
 </head>
 {% load staticfiles %}
 <script type="text/javascript" src="{% static "combination.js" %}"></script>
@@ -81,7 +81,7 @@ function check_submit() {
 	if(!document.form1.bid_name.value) {
 		alert("저장할 이름을 입력하세요.");
 		return false;
-	} 
+	}
 	return true;
 }
 
@@ -98,7 +98,7 @@ for(i=0;i<item.checks.length;i++) {
 		$("#i"+(i+1)).attr("checked", true);
 }
 $("#base").val(item.base);
-$("#rate").val(item.rate); 
+$("#rate").val(item.rate);
 
 {% endif %}
 
@@ -108,21 +108,21 @@ var res2 = [];
 var i;
 $("#cal").on("click", function(){
 	check_array = [];
-	res2 = [];	
+	res2 = [];
 	for(i=1;i<=15;i++)
 	{
 		var str = "#i" + i;
 		var ischecked = $(str).prop('checked');
-		if(ischecked == true)	
+		if(ischecked == true)
 			check_array.push(i);
 		//console.log(str + " " + ischecked);
-	}	
+	}
 	if( $("#base").val().length === 0)
 	{
 		alert("기초금액을 입력해야 합니다.");
 		return;
 	}
-	if( $("#rate").val().length === 0) 
+	if( $("#rate").val().length === 0)
 	{
 		alert("투찰율을 입력해야 합니다.");
 		return;
@@ -135,7 +135,7 @@ $("#cal").on("click", function(){
 	}
 	else if(check_array.length <= 4)
 	{
-		var check_num; 
+		var check_num;
 		res = k_combinations([1,2,3,4,5,6,7,8,9,10,11,12,13,14,15], 4);
 		for(i = 0; i<res.length;i++)
 		{
@@ -159,7 +159,7 @@ $("#cal").on("click", function(){
 	/* 사정율 계산할 것! */
 	for(i=1;i<=15;i++)
 	{
-		var srate = parseFloat( $("#n"+i).val() ) / parseFloat( $("#base").val() ) * 100.0; 
+		var srate = parseFloat( $("#n"+i).val() ) / parseFloat( $("#base").val() ) * 100.0;
 		//console.log(srate);
 		srate = srate.toFixed(3);
 		//console.log(srate);
@@ -177,11 +177,11 @@ $("#cal").on("click", function(){
 		var percent;
 		price = 0;
 		row = "";
-		percent = 0.0;	
+		percent = 0.0;
 		for(var j=0;j<res2[i].length;j++)
 		{
 			price += parseInt( $("#n" + res2[i][j]).val() );
-		}	
+		}
 		price = price / 4.0;
 		//console.log(price);
 		percent = price / parseInt( $("#base").val() ) * 100.0;
@@ -222,10 +222,10 @@ $("#save").on("click", function(){
 	if(check_submit() === false)
 	{
 		e.preventDefault();
-		document.form1.bid_name.focus();	
-		document.location.href="./"; 
+		document.form1.bid_name.focus();
+		document.location.href="./";
 		return;
- 	}  
+ 	}
 	var theForm=document.getElementById("normal");
 	theForm.action = "./add/";
 	theForm.submit();

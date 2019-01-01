@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.shortcuts import render, redirect
 from django.http.response import HttpResponse
-from models import BidItem, Member
+from .models import BidItem, Member
 import json
 
 current_member = u'admin'
@@ -16,28 +16,28 @@ def bidindexid(request, bid):
         item = BidItem.objects.get(id=bid, member=current_member)
     except Exception:
         return redirect('/bid')
-    print item.data
-    print json.dumps(item.data)
+    # print("item.data", item.data)
+    # print("json.dumps(item.data)", json.dumps(item.data))
     return render(request, 'index.html', {'biditems':biditems, 'item':item})
 
 def bidadd(request):
     actual_member = Member.objects.get(id=current_member)
-    
+
     bid_name = request.POST['bid_name']
     prices = [ int(x) for x in request.POST.getlist('prices') ]
     base = int(request.POST['base'])
     rate = float(request.POST['rate'])
     checks = []
-    for i in range(1,16):
+    for i in range(1,15+1):
         cstr = u"c" + str(i)
         if cstr in request.POST.getlist('checks'):
             checks.append(1)
         else:
             checks.append(0)
-    #print checks
+    # print("checks", checks)
     data = {'prices':prices, 'base':base, 'rate':rate, 'checks':checks}
-    #print data
-    
+    # print("data", data)
+
     try:
         # #1 2단계 POST 변수에서 bid에 값이 존재하는 지 확인. #}
         bid = request.POST['bid']

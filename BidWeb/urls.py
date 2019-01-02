@@ -24,4 +24,5 @@ urlpatterns = [
     url(r'^(?P<bid>\d+)$', bid.views.bidindexid),
     url(r'^add/$', bid.views.bidadd),
     url(r'^del/(?P<bid>\d+)$', bid.views.biddel),
+    url(r'^excel/$', bid.views.bidexcel),
 ]
